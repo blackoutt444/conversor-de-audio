@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/webp" href="neon_music_icon.png">
+    <title>Downloader & Conversor </title>
+    <style>
+        /* Fundo preto e fontes */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #000;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* Container centralizado com bordas neon */
+        .container {
+            max-width: 400px;
+            margin: auto;
+            background: #111;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(138, 43, 226, 0.8), 0 0 40px rgba(0, 191, 255, 0.8);
+        }
+
+        /* Estilos para os inputs e botões */
+        input, select, button {
+            width: 100%;
+            margin: 10px 0;
+            padding: 10px;
+            border: 2px solid #00bfff;
+            border-radius: 5px;
+            background: #222;
+            color: white;
+            font-size: 16px;
+            text-align: center;
+            outline: none;
+        }
+
+        /* Efeito neon nos inputs ao focar */
+        input:focus, select:focus {
+            border-color: #8a2be2;
+            box-shadow: 0 0 10px #8a2be2;
+        }
+
+        /* Botão estilizado com efeito neon */
+        button {
+            background: linear-gradient(45deg, #8a2be2, #00bfff);
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+        }
+
+        button:hover {
+            box-shadow: 0 0 20px #8a2be2, 0 0 30px #00bfff;
+            transform: scale(1.05);
+        }
+
+        /* Mensagem de status */
+        #status {
+            margin-top: 15px;
+            font-weight: bold;
+            color: #00bfff;
+            text-shadow: 0 0 10px #8a2be2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 style="color: #8a2be2; text-shadow: 0 0 10px #8a2be2;">Downloader & Conversor 🎶🎶</h1>
+        <p style="color: #00bfff;">Baixe e converta vídeos e áudios facilmente!</p>
+
+        <input type="text" id="url" placeholder="Cole o link aqui..." />
+        
+        <select id="format">
+            <option value="mp3">MP3</option>
+            <option value="wav">WAV</option>
+            <option value="ogg">OGG</option>
+            <option value="flac">FLAC</option>
+            <option value="aac">AAC</option>
+        </select>
+
+        <button onclick="downloadMedia()">📥 Baixar e Converter</button>
+
+        <p id="status"></p>
+    </div>
+
+    <script>
+        async function downloadMedia() {
+            let url = document.getElementById("url").value;
+            let format = document.getElementById("format").value;
+            let status = document.getElementById("status");
+
+            if (!url) {
+                status.innerHTML = "❌ Insira um link válido!";
+                return;
+            }
+
+            status.innerHTML = "⏳ Processando...";
+
+            try {
+                let response = await fetch("http://127.0.0.1:5000/download", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ url, format })
+                });
+
+                let data = await response.json();
+                if (data.success) {
+                    status.innerHTML = `✅ Download concluído: <a href="${data.file}" download style="color:#8a2be2;">Clique aqui</a>`;
+                } else {
+                    status.innerHTML = `❌ Erro: ${data.error}`;
+                }
+            } catch (error) {
+                status.innerHTML = "❌ Erro ao conectar ao servidor!";
+            }
+        }
+    </script>
+</body>
+</html>
