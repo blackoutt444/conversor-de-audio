@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
+    <title>Downloader & Conversor</title>
+    <style>
+        body {
+            font-family: Arial;
+            background-color: #000;
+            color: white;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: auto;
+            background: #111;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(138, 43, 226, 0.8), 0 0 40px rgba(0, 191, 255, 0.8);
+        }
+
+        input, select, button {
+            width: 100%;
+            margin: 10px 0;
+            padding: 10px;
+            background: #222;
+            color: white;
+            border: 2px solid #00bfff;
+            border-radius: 5px;
+        }
+
+        button {
+            background: linear-gradient(45deg, #8a2be2, #00bfff);
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        #status {
+            margin-top: 15px;
+            color: #00bfff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Downloader & Conversor 🎶</h1>
+        <input type="text" id="url" placeholder="Cole o link aqui..." />
+        <select id="format">
+            <option value="mp3">MP3</option>
+            <option value="wav">WAV</option>
+        </select>
+        <button onclick="downloadMedia()">Baixar e Converter</button>
+        <p id="status"></p>
+    </div>
+    <script>
+        async function downloadMedia() {
+            const url = document.getElementById("url").value;
+            const format = document.getElementById("format").value;
+            const status = document.getElementById("status");
+
+            if (!url) {
+                status.innerHTML = "❌ Insira um link válido!";
+                return;
+            }
+
+            status.innerHTML = "⏳ Processando...";
+
+            try {
+                const response = await fetch("/download", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ url, format })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    status.innerHTML = `✅ Download pronto: <a href="${data.file}" download>Clique aqui</a>`;
+                } else {
+                    status.innerHTML = `❌ Erro: ${data.error}`;
+                }
+            } catch (err) {
+                status.innerHTML = "❌ Erro ao conectar com o servidor!";
+            }
+        }
+    </script>
+</body>
+</html>

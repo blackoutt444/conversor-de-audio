@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<<<<<<< HEAD
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
@@ -121,5 +122,121 @@
     }
 }
     </script>
+=======
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Conversor de Áudio 🎵</title>
+  <link rel="icon" href="{{ url_for('static', filename='favicon.png') }}">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap');
+
+    body {
+      background: radial-gradient(circle at center, #0a0f2c 0%, #0c1c3d 100%);
+      color: #00f0ff;
+      font-family: 'Orbitron', sans-serif;
+      text-align: center;
+      padding: 50px;
+      margin: 0;
+      min-height: 100vh;
+    }
+
+    h1 {
+      font-size: 2.7rem;
+      color: #00f0ff;
+      text-shadow: 0 0 8px #00f0ff, 0 0 20px #0088ff;
+      margin-bottom: 40px;
+    }
+
+    input, select, button {
+      background: #000d1a;
+      border: 2px solid #00f0ff;
+      color: #ffffff;
+      padding: 12px;
+      margin: 12px;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: 0.3s ease;
+      width: 270px;
+      box-shadow: 0 0 8px #00f0ff66;
+    }
+
+    input::placeholder {
+      color: #aaf3ff;
+    }
+
+    button:hover {
+      background-color: #0088ff;
+      box-shadow: 0 0 15px #00f0ffcc;
+      cursor: pointer;
+    }
+
+    #status {
+      margin-top: 25px;
+      font-weight: bold;
+      color: #00f0ff;
+      text-shadow: 0 0 10px #00f0ff88;
+    }
+
+    a {
+      color: #00f0ff;
+      text-decoration: underline;
+    }
+
+    a:hover {
+      color: #ffffff;
+    }
+  </style>
+</head>
+<body>
+  <h1>Conversor de Áudio 🔊</h1>
+
+  <input type="text" id="url" placeholder="QUAL A PLAY DE HOJE?"><br>
+
+  <select id="formato">
+    <option value="mp3">MP3</option>
+    <option value="wav">WAV</option>
+    <option value="ogg">OGG</option>
+    <option value="flac">FLAC</option>
+    <option value="aac">AAC</option>
+  </select><br>
+
+  <button onclick="baixar()">Baixar e Converter</button>
+
+  <div id="status"></div>
+
+  <script>
+    async function baixar() {
+      const url = document.getElementById("url").value.trim();
+      const format = document.getElementById("formato").value;
+      const status = document.getElementById("status");
+
+      if (!url) {
+        status.textContent = "🚫 Insira um link válido.";
+        return;
+      }
+
+      status.textContent = "🔄 Enviando requisição ao servidor...";
+
+      try {
+        const response = await fetch("/download", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ url, format })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          status.innerHTML = `✅ Download pronto! <a href="${data.file}" target="_blank">Clique aqui para baixar</a>`;
+        } else {
+          status.textContent = `Erro: ${data.error}`;
+        }
+      } catch (e) {
+        status.textContent = `❌ Erro na requisição: ${e}`;
+      }
+    }
+  </script>
+>>>>>>> 3e11110 (primeiro deploy para o Render)
 </body>
 </html>

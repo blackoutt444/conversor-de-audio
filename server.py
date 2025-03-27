@@ -1,13 +1,28 @@
+<<<<<<< HEAD
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import os
 
 app = Flask(__name__)
+=======
+from flask import Flask, request, jsonify, render_template
+from flask_cors import CORS
+import os
+print("Arquivos em templates:", os.listdir(os.path.join(os.getcwd(), "templates")))
+print("CWD:", os.getcwd())
+print("Arquivos na pasta templates:", os.listdir(os.path.join(os.getcwd(), "templates")))
+app = Flask(__name__, template_folder=os.path.join(os.getcwd(), "templates"))
+
+>>>>>>> 3e11110 (primeiro deploy para o Render)
 CORS(app)  # Permitir requisições do frontend
 
 @app.route("/")
 def home():
+<<<<<<< HEAD
     return "Servidor Flask está rodando!"
+=======
+    return  render_template("index.html")
+>>>>>>> 3e11110 (primeiro deploy para o Render)
 
 @app.route("/download", methods=["POST"])
 def download():
