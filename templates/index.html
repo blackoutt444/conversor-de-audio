@@ -4,27 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
-    <title>Downloader & Conversor 🎶🎶</title>
+    <title>Downloader & Conversor</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap');
-
+        /* Fundo preto e fontes */
         body {
-            background: radial-gradient(circle at center, #0a0f2c 0%, #0c1c3d 100%);
-            color: #00f0ff;
-            font-family: 'Orbitron', sans-serif;
+            font-family: Arial, sans-serif;
+            background-color: #000;
+            color: white;
             text-align: center;
-            padding: 50px;
+            padding: 20px;
             margin: 0;
             min-height: 100vh;
         }
 
-        h1 {
-            font-size: 2.7rem;
-            color: #00f0ff;
-            text-shadow: 0 0 8px #00f0ff, 0 0 20px #0088ff;
-            margin-bottom: 40px;
-        }
-
+        /* Container centralizado com bordas neon */
         .container {
             max-width: 400px;
             margin: auto;
@@ -34,11 +27,12 @@
             box-shadow: 0 0 20px rgba(138, 43, 226, 0.8), 0 0 40px rgba(0, 191, 255, 0.8);
         }
 
+        /* Estilos para os inputs e botões */
         input, select, button {
             width: 100%;
             margin: 10px 0;
             padding: 10px;
-            border: 2px solid #00f0ff;
+            border: 2px solid #00bfff;
             border-radius: 5px;
             background: #222;
             color: white;
@@ -47,15 +41,13 @@
             outline: none;
         }
 
-        input::placeholder {
-            color: #aaf3ff;
-        }
-
+        /* Efeito neon nos inputs ao focar */
         input:focus, select:focus {
             border-color: #8a2be2;
             box-shadow: 0 0 10px #8a2be2;
         }
 
+        /* Botão estilizado com efeito neon */
         button {
             background: linear-gradient(45deg, #8a2be2, #00bfff);
             color: white;
@@ -71,6 +63,7 @@
             transform: scale(1.05);
         }
 
+        /* Mensagem de status */
         #status {
             margin-top: 15px;
             font-weight: bold;
@@ -78,23 +71,36 @@
             text-shadow: 0 0 10px #8a2be2;
         }
 
-        a {
-            color: #00f0ff;
-            text-decoration: underline;
+        /* Responsividade para telas pequenas */
+        @media (max-width: 768px) {
+            .container {
+                width: 100%;
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            button {
+                font-size: 16px;
+                padding: 12px;
+            }
+
+            input, select {
+                font-size: 14px;
+            }
         }
 
-        a:hover {
-            color: #ffffff;
-        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1 style="color: #8a2be2; text-shadow: 0 0 10px #8a2be2;">CONVERSOR DE AUDIO 🎶🎶</h1>
+        <h1 style="color: #8a2be2; text-shadow: 0 0 10px #8a2be2;">Downloader & Conversor 🎶🎶</h1>
         <p style="color: #00bfff;">Baixe e converta vídeos e áudios facilmente!</p>
 
-        <input type="text" id="url" placeholder="QUAL A PLAY DE HOJE?" />
-
+        <input type="text" id="url" placeholder="Cole o link aqui..." />
+        
         <select id="format">
             <option value="mp3">MP3</option>
             <option value="wav">WAV</option>
@@ -122,7 +128,7 @@
             status.innerHTML = "⏳ Processando...";
 
             try {
-                let response = await fetch("https://conversor-de-audio.onrender.com/download", {
+                let response = await fetch("https://conversor-de-audio.onrender.com/download", { 
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ url, format })
