@@ -15,15 +15,21 @@
             padding: 20px;
         }
 
-        /* Container centralizado com bordas neon */
-        .container {
-            max-width: 400px;
-            margin: auto;
-            background: #111;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(138, 43, 226, 0.8), 0 0 40px rgba(0, 191, 255, 0.8);
-        }
+        /* Centralizar o container na tela */
+.container {
+    max-width: 400px;
+    background: #111;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(138, 43, 226, 0.8), 0 0 40px rgba(0, 191, 255, 0.8);
+
+    /* Novas propriedades para centralizar */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
 
         /* Estilos para os inputs e botões */
         input, select, button {
@@ -100,7 +106,6 @@
         status.innerHTML = "❌ Insira um link válido!";
         return;
     }
-
     status.innerHTML = "⏳ Processando...";
 
     try {
