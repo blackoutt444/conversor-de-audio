@@ -1,3 +1,5 @@
-Flask 
-Flask-CORS 
+Flask
+flask-cors
 gunicorn
+yt-dlp
+pydub
