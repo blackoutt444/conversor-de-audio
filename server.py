@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, send_file
+from flask import Flask, request, jsonify, send_file,render_template
 from flask_cors import CORS
 import os
 from yt_dlp import YoutubeDL
@@ -13,7 +13,7 @@ os.makedirs(DOWNLOAD_FOLDER, exist_ok=True)
 
 @app.route("/")
 def home():
-    return "Servidor Flask está rodando com yt-dlp + pydub!"
+    return render_template ("index.html")
 
 @app.route("/download", methods=["POST"])
 def download():
