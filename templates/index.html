@@ -3,10 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
-    <title>Downloader & Conversor </title>
+    <title>Downloader & Conversor</title>
     <style>
-        /* Fundo preto e fontes */
         body {
             font-family: Arial, sans-serif;
             background-color: #000;
@@ -15,51 +13,58 @@
             padding: 20px;
         }
 
-        /* Centralizar o container na tela */
-.container {
-    max-width: 400px;
-    background: #111;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 20px rgba(138, 43, 226, 0.8), 0 0 40px rgba(0, 191, 255, 0.8);
+        .container {
+            max-width: 400px;
+            background: #111;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(138, 43, 226, 0.8), 0 0 40px rgba(0, 191, 255, 0.8);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
 
-    /* Novas propriedades para centralizar */
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
+        h1 {
+            color: #8a2be2;
+            text-shadow: 0 0 10px #8a2be2;
+        }
 
+        p {
+            color: #00bfff;
+        }
 
-        /* Estilos para os inputs e botões */
-        input, select, button {
+        input[type="text"], select {
             width: 100%;
-            margin: 10px 0;
             padding: 10px;
+            font-size: 16px;
             border: 2px solid #00bfff;
             border-radius: 5px;
             background: #222;
             color: white;
-            font-size: 16px;
-            text-align: center;
+            box-sizing: border-box;
+            margin: 10px 0;
             outline: none;
+            text-align: center;
         }
 
-        /* Efeito neon nos inputs ao focar */
-        input:focus, select:focus {
+        input[type="text"]:focus, select:focus {
             border-color: #8a2be2;
             box-shadow: 0 0 10px #8a2be2;
         }
 
-        /* Botão estilizado com efeito neon */
         button {
+            width: 100%;
             background: linear-gradient(45deg, #8a2be2, #00bfff);
             color: white;
             font-size: 18px;
             font-weight: bold;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
             cursor: pointer;
-            transition: 0.3s;
             text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+            transition: 0.3s;
         }
 
         button:hover {
@@ -67,7 +72,6 @@
             transform: scale(1.05);
         }
 
-        /* Mensagem de status */
         #status {
             margin-top: 15px;
             font-weight: bold;
@@ -78,8 +82,8 @@
 </head>
 <body>
     <div class="container">
-        <h1 style="color: #8a2be2; text-shadow: 0 0 10px #8a2be2;">Downloader & Conversor 🎶🎶</h1>
-        <p style="color: #00bfff;">Baixe e converta vídeos e áudios facilmente!</p>
+        <h1>Downloader & Conversor 🎶🎶</h1>
+        <p>Baixe e converta vídeos e áudios facilmente!</p>
 
         <input type="text" id="url" placeholder="Cole o link aqui..." />
         
@@ -101,23 +105,23 @@
             let url = document.getElementById("url").value;
             let format = document.getElementById("format").value;
             let status = document.getElementById("status");
-    
+
             if (!url) {
                 status.innerHTML = "❌ Insira um link válido!";
                 return;
             }
-    
+
             status.innerHTML = "⏳ Processando...";
-    
+
             try {
                 let response = await fetch("https://conversor-de-audio.onrender.com/download", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ url, format })
                 });
-    
+
                 let data = await response.json();
-    
+
                 if (data.success) {
                     status.innerHTML = `✅ Download concluído: <a href="https://conversor-de-audio.onrender.com${data.file}" download style="color:#8a2be2;">Clique aqui</a>`;
                 } else {
@@ -127,6 +131,6 @@
                 status.innerHTML = "❌ Erro ao conectar ao servidor!";
             }
         }
-    </script>    
+    </script>
 </body>
 </html>
