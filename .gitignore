@@ -1,0 +1,13 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+
+# Arquivos gerados pela aplicação
+downloads/
+
+# Sistema
+.DS_Store
+Thumbs.db

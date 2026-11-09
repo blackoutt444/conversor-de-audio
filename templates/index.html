@@ -116,7 +116,7 @@
             status.innerHTML = "⏳ Processando...";
 
             try {
-                let response = await fetch("https://conversor-de-audio.onrender.com/download", {
+                let response = await fetch("/download", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ url, format })
@@ -125,7 +125,7 @@
                 let data = await response.json();
 
                 if (data.success) {
-                    status.innerHTML = `✅ Download concluído: <a href="https://conversor-de-audio.onrender.com${data.file}" download style="color:#8a2be2;">Clique aqui</a>`;
+                    status.innerHTML = `✅ Download concluído: <a href="${data.file}" download style="color:#8a2be2;">Clique aqui</a>`;
                 } else {
                     status.innerHTML = `❌ Erro: ${data.error}`;
                 }
