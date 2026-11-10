@@ -103,34 +103,42 @@
     </div>
 
     <script>
+        // Mensagens vindas do servidor entram sempre como texto (textContent),
+        // nunca como HTML, para não executar conteúdo injetado.
         async function downloadMedia() {
-            let url = document.getElementById("url").value;
-            let format = document.getElementById("format").value;
-            let status = document.getElementById("status");
+            const url = document.getElementById("url").value;
+            const format = document.getElementById("format").value;
+            const status = document.getElementById("status");
 
             if (!url) {
-                status.innerHTML = "❌ Insira um link válido!";
+                status.textContent = "❌ Insira um link válido!";
                 return;
             }
 
-            status.innerHTML = "⏳ Processando...";
+            status.textContent = "⏳ Processando...";
 
             try {
-                let response = await fetch("/download", {
+                const response = await fetch("/download", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ url, format })
                 });
 
-                let data = await response.json();
+                const data = await response.json();
 
-                if (data.success) {
-                    status.innerHTML = `✅ Download concluído: <a href="${data.file}" download style="color:#8a2be2;">Clique aqui</a>`;
+                if (data.success && typeof data.file === "string" && data.file.startsWith("/download-file?name=")) {
+                    const link = document.createElement("a");
+                    link.href = data.file;
+                    link.download = "";
+                    link.textContent = "Clique aqui";
+                    link.style.color = "#8a2be2";
+                    status.textContent = "✅ Download concluído: ";
+                    status.appendChild(link);
                 } else {
-                    status.innerHTML = `❌ Erro: ${data.error}`;
+                    status.textContent = `❌ Erro: ${String(data.error || "falha desconhecida")}`;
                 }
             } catch (error) {
-                status.innerHTML = "❌ Erro ao conectar ao servidor!";
+                status.textContent = "❌ Erro ao conectar ao servidor!";
             }
         }
     </script>

@@ -29,3 +29,20 @@ jobs:
 
       - name: Rodar testes
         run: pytest -v
+
+      - name: Smoke test com Gunicorn (start.sh)
+        run: |
+          PORT=8000 ./start.sh > gunicorn.log 2>&1 &
+          for i in $(seq 1 30); do
+            curl -fsS http://127.0.0.1:8000/ > /dev/null && break
+            sleep 1
+          done
+          curl -fsS http://127.0.0.1:8000/ | grep -q "Downloader"
+          status=$(curl -s -o resposta.json -w "%{http_code}" -X POST http://127.0.0.1:8000/download \
+            -H "Content-Type: application/json" \
+            -d '{"url": "http://169.254.169.254/latest/meta-data/", "format": "mp3"}')
+          cat resposta.json
+          test "$status" = "400"
+          # O Gunicorn subiu com o timeout configurado no start.sh
+          ps -eo args | grep "[g]unicorn" | grep -q -- "--timeout 300"
+          cat gunicorn.log
