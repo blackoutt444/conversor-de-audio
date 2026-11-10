@@ -1,5 +1,7 @@
 # 🎧 Conversor de Áudio
 
+[![CI](https://github.com/blackoutt444/conversor-de-audio/actions/workflows/ci.yml/badge.svg)](https://github.com/blackoutt444/conversor-de-audio/actions/workflows/ci.yml)
+
 Aplicação web em **Python/Flask** que baixa o áudio de um vídeo a partir do link e converte para o formato escolhido.
 
 ![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white)
@@ -49,6 +51,22 @@ Em produção, rode com Gunicorn:
 gunicorn server:app
 ```
 
+## 🧪 Testes
+
+A suíte usa **pytest** e roda no **GitHub Actions** (Python 3.12 e 3.13) a cada push e pull request. O yt-dlp é substituído por um MP3 gerado localmente, então os testes não dependem de internet, mas a conversão usa o FFmpeg de verdade.
+
+```bash
+pip install -r requirements-dev.txt
+pytest -v
+```
+
+O que é verificado:
+
+- conversão para cada formato suportado, conferindo que o arquivo abre e mantém a duração
+- remoção do arquivo temporário depois da conversão
+- validação de campos obrigatórios e de formatos não suportados
+- bloqueio de acesso a arquivos fora da pasta de downloads (`../`)
+
 ## 🔌 API
 
 | Método | Rota | Descrição |
@@ -64,7 +82,12 @@ gunicorn server:app
 │   └── index.html       # Interface web
 ├── static/
 │   └── favicon.png
+├── tests/
+│   └── test_server.py   # Testes automatizados (pytest)
+├── .github/workflows/
+│   └── ci.yml           # Integração contínua
 ├── requirements.txt
+├── requirements-dev.txt # Dependências de desenvolvimento (pytest)
 └── start.sh             # Script de inicialização
 ```
 

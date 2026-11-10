@@ -30,10 +30,14 @@ def download():
     if audio_format not in ALLOWED_FORMATS:
         return jsonify({"success": False, "error": "Formato não suportado."}), 400
 
+    # Nomes únicos: o temporário precisa ser diferente do final, senão a
+    # limpeza do temporário apagaria o próprio resultado quando o formato é MP3
+    audio_id = str(uuid.uuid4())
+    temp_filename = os.path.join(DOWNLOAD_FOLDER, f"{audio_id}_original.mp3")
+    final_filename = f"{audio_id}.{audio_format}"
+    final_path = os.path.join(DOWNLOAD_FOLDER, final_filename)
+
     try:
-        # Nome temporário único
-        audio_id = str(uuid.uuid4())
-        temp_filename = os.path.join(DOWNLOAD_FOLDER, f"{audio_id}.mp3")
 
         # 1. Baixa o áudio com yt-dlp
         ydl_opts = {
@@ -51,15 +55,14 @@ def download():
             ydl.download([url])
 
         # 2. Converte para o formato desejado usando pydub
-        audio = AudioSegment.from_file(temp_filename, format="mp3")
-        final_filename = f"{audio_id}.{audio_format}"
-        final_path = os.path.join(DOWNLOAD_FOLDER, final_filename)
-        # O FFmpeg grava AAC puro pelo muxer "adts" (não existe muxer "aac")
-        ffmpeg_format = "adts" if audio_format == "aac" else audio_format
-        audio.export(final_path, format=ffmpeg_format)
-
-        # Remove o arquivo temporário
-        os.remove(temp_filename)
+        if audio_format == "mp3":
+            # Já está em MP3: evita uma segunda compressão com perda
+            os.replace(temp_filename, final_path)
+        else:
+            audio = AudioSegment.from_file(temp_filename, format="mp3")
+            # O FFmpeg grava AAC puro pelo muxer "adts" (não existe muxer "aac")
+            ffmpeg_format = "adts" if audio_format == "aac" else audio_format
+            audio.export(final_path, format=ffmpeg_format)
 
         return jsonify({
             "success": True,
@@ -68,6 +71,11 @@ def download():
 
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
+
+    finally:
+        # Remove o temporário mesmo se algo falhar no meio do caminho
+        if os.path.exists(temp_filename):
+            os.remove(temp_filename)
 
 @app.route("/download-file")
 def download_file():
