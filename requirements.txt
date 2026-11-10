@@ -3,3 +3,4 @@ flask-cors
 gunicorn
 yt-dlp
 pydub
+audioop-lts; python_version >= "3.13"
