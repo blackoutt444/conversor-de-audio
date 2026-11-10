@@ -43,13 +43,19 @@ pip install -r requirements.txt
 python server.py
 ```
 
-Acesse `http://localhost:5000`. A porta pode ser alterada pela variável de ambiente `PORT`.
+Acesse `http://localhost:5000`. A porta pode ser alterada pela variável de ambiente `PORT`. O `python server.py` usa o servidor de desenvolvimento do Flask e serve só para uso local.
 
-Em produção, rode com Gunicorn:
+Em produção (Linux), use o `start.sh`, que inicia o Gunicorn:
 
 ```bash
-gunicorn server:app
+./start.sh
 ```
+
+| Variável | Padrão | Descrição |
+| -------- | ------ | --------- |
+| `PORT` | `5000` | Porta HTTP |
+| `WEB_CONCURRENCY` | `2` | Número de workers do Gunicorn |
+| `GUNICORN_TIMEOUT` | `300` | Segundos até o Gunicorn encerrar uma requisição. O padrão do Gunicorn (30 s) é curto demais para baixar e converter um vídeo de 10 minutos |
 
 ## 🔒 Segurança e limites
 

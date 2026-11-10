@@ -192,9 +192,14 @@ def download():
 
     finally:
         conversion_slots.release()
-        # Remove o temporário mesmo se algo falhar no meio do caminho
-        if os.path.exists(temp_filename):
-            os.remove(temp_filename)
+        # Remove o temporário mesmo se algo falhar no meio do caminho. Uma falha
+        # aqui não pode substituir a resposta já montada; a limpeza por idade
+        # apaga o arquivo depois.
+        try:
+            if os.path.exists(temp_filename):
+                os.remove(temp_filename)
+        except OSError:
+            app.logger.warning("Não foi possível remover %s", temp_filename, exc_info=True)
 
 
 @app.route("/download-file")

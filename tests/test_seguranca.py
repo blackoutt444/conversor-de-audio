@@ -139,6 +139,27 @@ def test_vaga_e_liberada_mesmo_quando_a_conversao_falha(client, fake_ydl, monkey
     slots.release()
 
 
+def test_falha_ao_apagar_temporario_nao_quebra_a_resposta(client, fake_ydl, monkeypatch):
+    slots = threading.BoundedSemaphore(1)
+    monkeypatch.setattr(server, "conversion_slots", slots)
+
+    def baixa_e_falha(self, urls):
+        TONE.export(self.opts["outtmpl"], format="mp3")
+        raise RuntimeError("falhou depois de baixar")
+
+    def remove_bloqueado(path):
+        raise PermissionError("arquivo em uso")
+
+    monkeypatch.setattr(fake_ydl, "download", baixa_e_falha)
+    monkeypatch.setattr(server.os, "remove", remove_bloqueado)
+
+    response = client.post("/download", json={"url": VIDEO_URL, "format": "mp3"})
+    assert response.status_code == 500
+    assert response.get_json()["error"] == "Erro interno ao processar o áudio."
+    assert slots.acquire(blocking=False) is True
+    slots.release()
+
+
 def test_corpo_grande_demais(client, fake_ydl):
     response = client.post("/download", data="x" * (32 * 1024), content_type="application/json")
     assert response.status_code == 413
